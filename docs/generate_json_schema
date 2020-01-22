@@ -1,0 +1,34 @@
+#!/usr/bin/python3
+# Copyright © 2020 Red Hat, Inc.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 3 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""Generate JSON schema RST files."""
+
+import json
+import os
+
+from fedora_messaging_infragit.messages import receive
+
+
+DOCS_DIR = os.path.dirname(__file__)
+
+
+for attr in dir(receive):
+    attr = getattr(receive, attr)
+    if hasattr(attr, 'body_schema') and hasattr(attr, 'topic') and attr.topic:
+        with open(f"{DOCS_DIR}/_generated/receive.rst", 'w') as rst:
+            indented_json = json.dumps(attr.body_schema, indent=4).replace('\n', '\n    ')
+            rst.write(f"{attr.topic}\n{'-'*len(attr.topic)}\n::"
+                      f'\n\n    {indented_json}\n\n')
+        with open(f"{DOCS_DIR}/build/html/_schema/v1/{attr.topic}", 'w') as json_f:
+            json_f.write(json.dumps(attr.body_schema))

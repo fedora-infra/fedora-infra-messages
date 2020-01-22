@@ -1,0 +1,5 @@
+*.pyc
+.coverage
+.mypy_cache
+.tox
+fedora_messaging_infragit.egg-info/
