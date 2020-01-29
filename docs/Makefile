@@ -20,6 +20,7 @@ clean:
 schema:
 	@mkdir -p _generated
 	@mkdir -p build/html/_schema/v1
+	@mkdir -p source/_static
 	@PYTHONPATH=.. python3 ./generate_json_schema
 
 # Catch-all target: route all unknown targets to Sphinx using the new
